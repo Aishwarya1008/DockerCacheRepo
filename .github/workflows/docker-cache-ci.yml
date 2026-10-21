@@ -1,0 +1,26 @@
+name: Docker Build with Cache
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docker-cache:
+    runs-on: ubuntu-runner
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          tags: my-node-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
